@@ -72,3 +72,7 @@ main {
 
    border-radius: 10px;
 }
+
+.held {
+   background-color: #59E391 !important;
+}
