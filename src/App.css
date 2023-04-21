@@ -9,13 +9,39 @@ body {
 }
 
 main {
-   width: 320px;
-   height: 320px;
+   width: 520px;
+   height: 390px;
    margin-left: 20px;
    margin-top: 30px;
    background-color: white;
 
    border-radius: 10px;
+
+   display: flex;
+}
+
+.game {
+   width: 320px;
+}
+
+.highscores {
+   width: 200px;
+   display: flex;
+   justify-content: center;
+}
+
+.stats {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.stats > h3 {
+   margin-bottom: 0px;
+}
+
+.divition {
+   width: 150px;
 }
 
 .title {
@@ -75,4 +101,22 @@ main {
 
 .held {
    background-color: #59E391 !important;
+}
+
+.scores {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   gap: 0;
+}
+
+.score {
+   margin-top: 10;
+   margin-bottom: 0;
+}
+
+.time {
+   margin-top: 5px;
+   margin-bottom: 0;
 }

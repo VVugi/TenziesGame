@@ -6,6 +6,10 @@ import Confetti from 'react-confetti';
 
 function App()
 {
+   const [rolls, setRolls] = useState(0);
+   const [time, setTime] = useState(0);
+   const [scores, setScores] = useState();
+
    const [dice, setDice] = useState(allNewDice);
    const [tenzies, setTenzies] = useState(false);
 
@@ -31,8 +35,10 @@ function App()
    {
       if(tenzies)
       {
+         setRolls(1);
          setDice(allNewDice);
          setTenzies(false);
+         setTime(0);
       }
       else
       {
@@ -50,6 +56,16 @@ function App()
             
             return newDie;
          }));
+         
+         if(dice.some(die => die.isHeld))
+         {
+            setRolls(rolls + 1);
+         }
+         else
+         {
+            setRolls(1);
+            setTime(0);
+         }
       }
    }
 
@@ -87,28 +103,62 @@ function App()
       }
    }, [dice]);
 
+   useEffect(() => { // A bit wonky when resetting but hey, it works
+      let interval;
+      
+      if(!tenzies)
+      {
+         interval = setInterval(function() {
+            setTime(oldTime => {
+               if(tenzies)
+               {
+                  clearInterval(interval);
+               }
+
+               return oldTime + 1;
+            });
+         }, 1000);  
+      }
+
+      return () => clearInterval(interval);
+   }, [tenzies]);
+
    return (
       <main>
-         
-         <Confetti
-            width={400}
-            height={500}
-            numberOfPieces={tenzies ? 69 : 0}
-         />
-
-         <div className="info">
-            <h1 className="title">Tenzies</h1>
-            <p className="instructions">Roll until all dice are the same. Click 
-                                       each die to freeze it at its current value 
-                                       between rolls.</p>   
-         </div>
-
-         <div className="dice">
-            {diceElements}
-         </div>
-
          <div className="game">
-            <input onClick={rollDice} className="roll" type="button" value={tenzies ? "New Game" : "Roll"}></input>
+            <Confetti
+               width={565}
+               height={445}
+               numberOfPieces={tenzies ? 69 : 0} // For the 'fade-out' effect
+            />
+
+            <div className="info">
+               <h1 className="title">Tenzies</h1>
+               <p className="instructions">Roll until all dice are the same. Click 
+                                          each die to freeze it at its current value 
+                                          between rolls.</p>   
+            </div>
+
+            <div className="scores">
+               <h4 className="score">Score: {rolls}</h4>
+               <h4 className="time">Time: {new Date(time * 1000).toISOString().slice(14, 19)}</h4>
+            </div>
+
+            <div className="dice">
+               {diceElements}
+            </div>
+
+            <div className="game">
+               <input onClick={rollDice} className="roll" type="button" value={tenzies ? "New Game" : "Roll"}></input>
+            </div>
+         </div>
+
+         <div className="highscores">
+            <div className="stats">
+               <h3>Highscores</h3>
+               <hr className='divition'/>
+               {scores}
+            </div>
          </div>
       </main>
    )
