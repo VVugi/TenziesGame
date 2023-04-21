@@ -8,10 +8,18 @@ function App()
 {
    const [rolls, setRolls] = useState(0);
    const [time, setTime] = useState(0);
-   const [scores, setScores] = useState();
+   const [scores, setScores] = useState(
+      () => JSON.parse(localStorage.getItem("scores")) || []
+   );
 
    const [dice, setDice] = useState(allNewDice);
    const [tenzies, setTenzies] = useState(false);
+
+   React.useEffect(() => {
+      localStorage.setItem("scores", JSON.stringify(scores))
+   }, [scores])
+
+   // localStorage.clear();
 
    function allNewDice()
    {
@@ -21,14 +29,14 @@ function App()
       {
          const die = {};
 
-         die.number = Math.floor(Math.random() * 6) + 1;
+         die.number = Math.floor(Math.random() * 2) + 1;
          die.isHeld = false;
          die.id = nanoid();
 
          dice.push(die);
       }
 
-      return dice
+      return dice;
    }
 
    function rollDice()
@@ -47,7 +55,7 @@ function App()
             
             if(!die.isHeld)
             {
-               newDie = {...die, number: Math.floor(Math.random() * 6) + 1};
+               newDie = {...die, number: Math.floor(Math.random() * 2) + 1};
             }
             else
             {
@@ -100,6 +108,13 @@ function App()
       if(dice.every(die => die.isHeld) && dice.every(die => die.number == dice[0].number))
       {
          setTenzies(true);
+
+         let newScore = {
+            score: rolls,
+            time: time
+         };
+
+         setScores(prevScores => [newScore, ...prevScores]);
       }
    }, [dice]);
 
@@ -122,6 +137,13 @@ function App()
 
       return () => clearInterval(interval);
    }, [tenzies]);
+
+   const orderedRecords = [...scores];
+   orderedRecords.sort((a, b) => a.score - b.score);
+
+   const scoresList = orderedRecords.map(score => 
+      <h4 className="score-item">Score: {score.score} Time: {new Date(score.time * 1000).toISOString().slice(14, 19)}</h4>
+   );
 
    return (
       <main>
@@ -155,9 +177,12 @@ function App()
 
          <div className="highscores">
             <div className="stats">
-               <h3>Highscores</h3>
+               <h3>Scores</h3>
                <hr className='divition'/>
-               {scores}
+               
+               <div className="list">
+                  {scoresList}
+               </div>
             </div>
          </div>
       </main>

@@ -40,6 +40,17 @@ main {
    margin-bottom: 0px;
 }
 
+.list {
+   display: flex;
+   flex-direction: column;
+   max-height: 310px;
+   overflow: hidden;
+}
+
+.score-item {
+   margin: 6px;
+}
+
 .divition {
    width: 150px;
 }
