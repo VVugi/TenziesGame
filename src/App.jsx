@@ -29,7 +29,7 @@ function App()
       {
          const die = {};
 
-         die.number = Math.floor(Math.random() * 2) + 1;
+         die.number = Math.floor(Math.random() * 6) + 1;
          die.isHeld = false;
          die.id = nanoid();
 
@@ -55,7 +55,7 @@ function App()
             
             if(!die.isHeld)
             {
-               newDie = {...die, number: Math.floor(Math.random() * 2) + 1};
+               newDie = {...die, number: Math.floor(Math.random() * 6) + 1};
             }
             else
             {
